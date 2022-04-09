@@ -1610,12 +1610,15 @@ class Backtest:
         s.loc['Max. Trade Duration'] = _round_timedelta(durations.max())
         s.loc['Avg. Trade Duration'] = _round_timedelta(durations.mean())
         s.loc['Profit Factor'] = returns[returns > 0].sum() / (abs(returns[returns < 0].sum()) or np.nan)  # noqa: E501
-        avg_profit =    pl[pl > 0].sum()/len(pl[pl > 0])
-        avg_loss =  abs(pl[pl < 0].sum()/len(pl[pl < 0]))
-        s.loc['Profit Factor FV'] = (avg_profit*s.loc['Win Rate [%]'])/(avg_loss*(100-s.loc['Win Rate [%]']))
+        s.loc['---------------------'] = '-------------------'
+        s.loc['Avg Profit'] = pl[pl >= 0].mean()
+        s.loc['Avg Profit [%]'] = returns[returns >= 0].mean() * 100
+        s.loc['Avg Loss'] = abs(pl[pl < 0].mean())
+        s.loc['Avg Loss [%]'] = abs(returns[returns < 0].mean()) * 100
+        s.loc['Profit Factor FV'] = (s.loc['Avg Profit']*s.loc['Win Rate [%]'])/(s.loc['Avg Loss']*(100-s.loc['Win Rate [%]']))
+        s.loc['----------------------'] = '-------------------'
         s.loc['Expectancy [%]'] = returns.mean() * 100
         s.loc['SQN'] = np.sqrt(n_trades) * pl.mean() / (pl.std() or np.nan)
-
         s.loc['_strategy'] = strategy
         s.loc['_equity_curve'] = equity_df
         s.loc['_trades'] = trades_df
