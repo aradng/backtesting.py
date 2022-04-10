@@ -1611,6 +1611,8 @@ class Backtest:
         s.loc['Avg. Trade Duration'] = _round_timedelta(durations.mean())
         s.loc['Profit Factor'] = returns[returns > 0].sum() / (abs(returns[returns < 0].sum()) or np.nan)  # noqa: E501
         s.loc['---------------------'] = '-------------------'
+        if np.isnan(s.loc['Sharpe Ratio']):
+            s.loc['Sharpe Ratio'] = np.inf
         if len(pl[pl >= 0]) > 0:    
             s.loc['Avg Profit'] = pl[pl >= 0].mean()
             s.loc['Avg Profit [%]'] = returns[returns >= 0].mean() * 100
@@ -1623,7 +1625,7 @@ class Backtest:
         else:
             s.loc['Avg Loss'] = 0
             s.loc['Avg Loss [%]'] = 0
-        s.loc['Profit Factor FV'] = (s.loc['Avg Profit']*s.loc['Win Rate [%]'])/(s.loc['Avg Loss']*(100-s.loc['Win Rate [%]']))
+        s.loc['Profit Factor FV'] = np.float64(s.loc['Avg Profit']*s.loc['Win Rate [%]'])/np.float64(s.loc['Avg Loss']*(100-s.loc['Win Rate [%]']))
         if np.isnan(s.loc['Profit Factor FV']):
             s.loc['Profit Factor FV'] = 0
         s.loc['----------------------'] = '-------------------'
