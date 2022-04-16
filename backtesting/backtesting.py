@@ -1620,8 +1620,8 @@ class Backtest:
             s.loc['Avg Profit'] = 0
             s.loc['Avg Profit [%]'] = 0
         if len(pl[pl <= 0]) > 0:
-            s.loc['Avg Loss'] = pl[pl <= 0].mean()
-            s.loc['Avg Loss [%]'] = returns[returns <= 0].mean() * 100
+            s.loc['Avg Loss'] = abs(pl[pl <= 0].mean())
+            s.loc['Avg Loss [%]'] = abs(returns[returns <= 0].mean() * 100)
         else:
             s.loc['Avg Loss'] = 0
             s.loc['Avg Loss [%]'] = 0
